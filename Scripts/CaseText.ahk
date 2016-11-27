@@ -1,76 +1,79 @@
-﻿;****************
-;*** CaseText ***
-;****************
-
-/*
+﻿/*
 This Script is used to capitalized highlighted strings via
 The Windows Clipboard.  The 4 Case options available are:
 
-CaseText("Next")
-CaseText("Upper")
-CaseText("Lower")
-CaseText("Title")
+CaseTextNext()
+CaseTextUpper()
+CaseTextLower()
+CaseTextTitle()
 
 */
 
-CaseText(CapsOption)
+CaseTextUpper()
 {
-	ClipboardTemp := ""
-	ClipboardTemp := ClipboardAll
-	Clipboard := ""
-	
-	Send ^c 
-	ClipWait, 1
-	If Not Clipboard 
-		Return
-	Clipboard := Clipboard ;Converting clipboard to plain text
-	sString := Clipboard ;Convert clipboard contents to a variable
-	Clipboard := ClipboardTemp ;Return what was previously on the clipboard 
-
-		;The 'Next' CapsOption will let you cycle the case.
-		If CapsOption = Next
-		{
-			sAlphaString := PRIVATE_CaseText_TextOnly(sString)
-			If sAlphaString is upper
-				StringLower, sString, sString
-			Else If sAlphaString is lower
-				StringUpper, sString, sString, T
-			Else
-				StringUpper, sString, sString
-		}
-		Else If CapsOption = Upper
-			StringUpper, sString, sString
-		Else If CapsOption = Lower
-			StringLower, sString, sString
-		Else If CapsOption = Title
-			StringUpper, sString, sString, T
-		
-		Send {Raw}%sString%
-
-		CSLength := StrLen(sString)
-		Send {Left %CSLength%}+{Right %CSLength%}
-
-	;Empty Variables
-	CSLength := "", ClipboardTemp := "", CapsOption := "", sString := "", sAlphaString := ""
+	text := PRIVATE_CaseText_GetSelectedText()
+	PRIVATE_CaseText_SendText(Format("{:U}", text))
 }
 
-/*
-PRIVATE FUNCTIONS
-(Not intended to be used outside of CaseText)
-*/
-
-;PRIVATE_CaseText_TextOnly returns a string that removes all numbers, puncuation, and spaces 
-;(and anything else that is not "is alpha").
-
-PRIVATE_CaseText_TextOnly(sString)
+CaseTextLower()
 {
-	sTempText := sString
-	Loop % StrLen(sTempText)
+	text := PRIVATE_CaseText_GetSelectedText()
+	PRIVATE_CaseText_SendText(Format("{:L}", text))
+}
+
+CaseTextTitle()
+{
+	text := PRIVATE_CaseText_GetSelectedText()
+	PRIVATE_CaseText_SendText(Format("{:T}", text))	
+}
+
+CaseTextNext()
+{
+	text := PRIVATE_CaseText_GetSelectedText()
+	alphabetText := RegExReplace(text, "[^A-Za-z]")
+
+	if alphabetText is upper
+		PRIVATE_CaseText_SendText(Format("{:L}", text))
+	else if alphabetText is lower
+		PRIVATE_CaseText_SendText(Format("{:T}", text))
+	else
+		PRIVATE_CaseText_SendText(Format("{:U}", text))
+}
+
+PRIVATE_CaseText_SendText(text)
+{
+	if not text 
 	{
-		sChar := Substr(sString,A_Index,1)
-		if sChar is not alpha
-			StringReplace, sTempText, sTempText, %sChar%,, All
+		MsgBox 48, CaseText Error, CaseText cannot be used on blank text.
+		return
 	}
-	sString := "", sChar := ""
-	return sTempText
+
+	if RegExMatch(text, "[\n\r]")
+	{
+		MsgBox 48, CaseText Error, CaseText cannot be used on multi-line text.
+		return
+	}
+
+	Send %text%
+
+	textLength := StrLen(text)
+	Send {Left %textLength%}+{Right %textLength%}
+}
+
+PRIVATE_CaseText_GetSelectedText()
+{
+	clipboardTemp := ""
+	clipboardTemp := ClipboardAll
+	Clipboard := ""
+	
+	Send ^c
+	ClipWait, 1
+	if Not Clipboard 
+		return
+		
+	Clipboard := Clipboard ;Converting clipboard to plain text
+	selectedText := Clipboard 
+	Clipboard := clipboardTemp ;Return what was previously on the clipboard
+
+	return selectedText 
 }
