@@ -1,8 +1,4 @@
-﻿;***********************
-;*** Script Building ***
-;***********************
-
-+^!F1::Send {Raw}{F1}
+﻿+^!F1::Send {Raw}{F1}
 +^!F2::Send {Raw}{F2}
 +^!F3::Send {Raw}{F3}
 +^!F4::Send {Raw}{F4}
