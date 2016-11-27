@@ -1,5 +1,5 @@
 # Autohotkey Backup Files
-.ahk.bak
+*.ahk.bak
 
 # Windows image file caches
 Thumbs.db
