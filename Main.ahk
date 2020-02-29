@@ -39,8 +39,19 @@ NumLock & NumpadAdd::Send {Volume_Up}
 NumLock & NumpadSub::Send {Volume_Down}
 NumLock & NumpadMult::Send {Volume_Mute}
 
-!#h::Edit %A_MyDocuments%/AutoHotkey/Hotkeys.ahk
-!#f::Edit %A_MyDocuments%/AutoHotkey/Functions.ahk
+EditUserAhkFile(ahkFilePath)
+{
+    workingDirectory := (A_MyDocuments)"\AutoHotkey"
+    ;Open in Visual Studio Code
+    Run, % "code.cmd "(ahkFilePath), %workingDirectory%, Hide UseErrorLevel
+    if ErrorLevel
+        ;Open in Notepad
+        Run, % "notepad.exe "(ahkFilePath), %workingDirectory%
+}
+
+!#e::EditUserAhkFile(A_ScriptFullPath)
+!#h::EditUserAhkFile("Hotkeys.ahk")
+!#f::EditUserAhkFile("Functions.ahk")
 
 #Hotstring ? o1 
 #Hotstring EndChars `t`n
