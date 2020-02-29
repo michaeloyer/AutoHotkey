@@ -15,11 +15,14 @@ SetTitleMatchMode, 2
 ;Preserve 10 Clipboards variables if script gets restarted as opposed to reloaded
 If %0% <> 0
 	TenClipboardsReloadVariables(1)
-	
+
+#Include %A_ScriptDir%\Scripts
 #Include CaseText.ahk
-#Include Script Building.ahk
 #Include Ten Clipboards.ahk
 #Include QuickDataEntry.ahk
+
+#Include %A_ScriptDir%\Hotkeys
+#Include Script Building.ahk
 
 Pause::Suspend
 NumLock & NumpadAdd::Send {Volume_Up}
@@ -28,7 +31,6 @@ NumLock & NumpadMult::Send {Volume_Mute}
 
 #Hotstring ? o1 
 #Hotstring EndChars `t`n
-
 
 ScrollLock & NumLock::Reload
 NumLock & ScrollLock::Run, % """" . A_AhkPath . """ /restart """ . A_ScriptFullPath . """ " . TenClipboardsPassParameters()
@@ -46,7 +48,7 @@ Alt & `::TenClipboardsOpenGUI()
 ^7:: TenClipboardsCopy(7)
 ^8:: TenClipboardsCopy(8)
 ^9:: TenClipboardsCopy(9)
-^0:: TenClipboardsCopy(0)
+^0:: TenClipboardsCopy(10)
 
 ;Send Text from the Ten Clipboards (Alt + Number)
 !1:: TenClipboardsSend(1)
@@ -58,7 +60,7 @@ Alt & `::TenClipboardsOpenGUI()
 !7:: TenClipboardsSend(7)
 !8:: TenClipboardsSend(8)
 !9:: TenClipboardsSend(9)
-!0:: TenClipboardsSend(0)
+!0:: TenClipboardsSend(10)
 
 ;Send Literal Text from the Clipboards (Shift + Alt + Number)
 +!1:: TenClipboardsSendRaw(1)
@@ -70,7 +72,7 @@ Alt & `::TenClipboardsOpenGUI()
 +!7:: TenClipboardsSendRaw(7)
 +!8:: TenClipboardsSendRaw(8)
 +!9:: TenClipboardsSendRaw(9)
-+!0:: TenClipboardsSendRaw(0)
++!0:: TenClipboardsSendRaw(10)
 
 Insert::QuickDataEntry_SendNextQuickText()
 Numlock & Insert::QuickDataEntry_GUI()
