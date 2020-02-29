@@ -15,10 +15,6 @@ SetTitleMatchMode, 2
 ;*** Auto Launch Field ***
 ;*************************
 
-;Preserve 10 Clipboards variables if script gets restarted as opposed to reloaded
-If %0% <> 0
-	MoreClipboardsReloadVariables(1)
-
 #Include <MoreClipboards>
 
 #Include %A_ScriptDir%\Scripts
@@ -37,7 +33,7 @@ NumLock & NumpadMult::Send {Volume_Mute}
 #Hotstring EndChars `t`n
 
 ScrollLock & NumLock::Reload
-NumLock & ScrollLock::Run, % """" . A_AhkPath . """ /restart """ . A_ScriptFullPath . """ " . MoreClipboardsPassParameters()
+NumLock & ScrollLock::Reload
 
 ;Open the Clipboard GUI
 Alt & `::MoreClipboardsOpenGUI()

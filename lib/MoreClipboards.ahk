@@ -15,22 +15,6 @@ MoreClipboardsGUI() (Launch Gui)
 MoreClipboardsReloadVariables(FirstReloadVariable:=1)
 MoreClipboardsPassParameters()
 
-
-;''''''''''''''''''''''''''''''''''''''''''''''''''''
-;''' Restarting the Script with Clipboards Intact '''
-;''''''''''''''''''''''''''''''''''''''''''''''''''''
-
-To restart the script with all clipboards values intact you can use the following line in place of Reload:
-
-Run, % """" . A_AhkPath . """ /restart """ . A_ScriptFullPath . """ " . MoreClipboardsPassParameters()
-
-
-This should go in your Auto-Exectue Section:
-
-;Preserve 10 Clipboards variables if script gets restarted as opposed to reloaded 
-If %0% <> 0
-	MoreClipboardsReloadVariables(1)
-
 ;'''''''''''''''''''''''''''''''''''''
 ;''' Default Hotkey Configurations '''
 ;'''''''''''''''''''''''''''''''''''''
@@ -89,22 +73,37 @@ Alt & `::MoreClipboardsOpenGUI()
 */
 
 MoreClipboards := []
-Loop, 10 ; Default Clipboard Count
-	MoreClipboards.Push("")
+MoreClipboardsDir := (A_AppData)"\AutoHotkey\MoreClipboards"
+FileCreateDir, %MoreClipboardsDir%
+
+; Default Clipboard Count.
+; Change the loop below if more are desired
+Loop, 10 
+{
+	MoreClipboards.Push(MoreClipboardsUtil_ReadClipboardFile(A_Index))
+}
 
 MoreClipboardsCopy(ByRef index)
 {
-	global
-	local ClipboardTemp := ClipboardAll
+	Temp := ClipboardAll
 	Clipboard := ""
 	Send ^c
 	ClipWait, 1
+	ClipText := Clipboard
+	Clipboard := Temp
+	Temp := ""
+
+	if ErrorLevel 
+		return
 	
 	if WinActive("ahk_class XLMAIN")
 		ClipText := RegExReplace(ClipText, "`r(?=`n)|`n$" "")
+	
+	global MoreClipboards
+	MoreClipboards[index] := ClipText
 
-	Clipboard := ClipboardTemp
-	ClipboardTemp := ""
+	;CacheFile for later reload
+	MoreClipboardsUtil_WriteClipboardFile(index, ClipText)
 }
 
 MoreClipboardsIndexToPasteOnChange := 0
@@ -119,7 +118,6 @@ MoreClipboardsPasteOnClipboardChange(Type)
 	}
 }
 OnClipboardChange("MoreClipboardsPasteOnClipboardChange")
-
 
 MoreClipboardsPaste(ByRef index)
 {
@@ -147,8 +145,9 @@ MoreClipboardsOpenGUI()
 {
 	global
 	local GuiTitle := "Set Clipboards Text"
-	  ; This will stop the Gui window from resetting without saving your
-	  ; clipboards if you press this hotkey and it's already open and instead give the window focus. 
+	
+	; This will stop the Gui window from resetting without saving your
+	; clipboards if you press this hotkey and it's already open and instead give the window focus. 
 	IfWinExist, %GuiTitle% ahk_class AutoHotkeyGUI 
 	{
 		WinActivate
@@ -156,7 +155,6 @@ MoreClipboardsOpenGUI()
 	}
 	
 	; If the window isn't open, it will create the Gui menu and display it.
-	
 	xGui := 9,  yGui := 0,  wGui := 600,  hGui := 20,  wButton := wGui/5,  ySection := 40
 	Gui, MoreClipboards:New,, %GuiTitle%
 	Gui, Add, Text, %           " x"(xGui)" y"( 6+yGui)" w"(wGui) " h"(hGui) , % "  Windows Clipboard"
@@ -172,55 +170,22 @@ MoreClipboardsOpenGUI()
 	Gui, Show
 }
 
-MoreClipboardsButtonSETCLIPBOARDS:
+MoreClipboardsButtonSETCLIPBOARDS() 
+{
+	global
 	Gui, Submit
 	Loop, % MoreClipboards.Length() 
 	{
-		MoreClipboards[A_Index] := GuiMoreClipboards%A_Index%
+		local content := GuiMoreClipboards%A_Index%
 		GuiMoreClipboards%A_Index% := ""
-	}
-	return
-
-/*
-Used for resetting a script without having to lose your 10 Clipboards values
-even when a clipboard is empty it will pass an empty string, so 10 variables
-are passed into the reloaded script.
-
-MoreClipboardsReloadVariables should be in your main script's auto-execute section.
-
-For more information see "parameters passed into a script" in the AutoHotkey Help Index or search for 
-"Passing Command Line Parameters to a Script".
-*/
-
-;Change FirstReloadVariable if you are passing other variables first ahead of the 10 Clip# variables
-MoreClipboardsReloadVariables(FirstReloadVariable:=1) 
-{
-	global
-	Loop, % MoreClipboards.Length()
-	{
-		PassParamNum := A_Index + FirstReloadVariable - 1
-		MoreClipboards[%A_LoopField%] := %PassParamNum%
+		MoreClipboards[A_Index] := content
+		MoreClipboardsUtil_WriteClipboardFile(A_Index, content)
 	}
 }
 
-MoreClipboardsPassParameters()
-{
-	global
-	local SingleClipboard := ""
+;Utility Functions not intended to be used outside of this Script
 
-	Loop, % MoreClipboards.Length()
-	{
-		SingleClipboard := MoreClipboards[A_Index]
-		PassParameters .= " " . PRIVATE_MoreClipboards_CleanParameterPassingString(%SingleClipboard%)
-	}
-
-	return PassParameters
-}
-
-;Private Functions not intended to be used outside of this Script
-
-
-PRIVATE_MoreClipboards_CleanParameterPassingString(PassString) ;Backslashes Nullify Quotes and other Backslashes.  See the help file for more details.
+MoreClipboardsUtil_CleanParameterPassingString(PassString) ;Backslashes Nullify Quotes and other Backslashes.  See the help file for more details.
 {
 	If InStr(PassString,"""") > 0 ;If the parameter being passed has a Quotation Mark or Backslash, the string will have to be put through these series of loops.
 	{		
@@ -249,4 +214,26 @@ PRIVATE_MoreClipboards_CleanParameterPassingString(PassString) ;Backslashes Null
 	
 	PassString := """" . PassString . """" ;Put 1 set of quotation marks around the PassString.
 	Return PassString
+}
+
+MoreClipboardsUtil_ReadClipboardFile(ByRef index)
+{
+	file := FileOpen(MoreClipboardsUtil_GetClipboardFilePath(index), "rw")		
+	ClipText := file.Read()
+	file.Close()
+	return ClipText
+}
+
+MoreClipboardsUtil_WriteClipboardFile(ByRef index, ByRef content)
+{
+	global MoreClipboards
+	file := FileOpen(MoreClipboardsUtil_GetClipboardFilePath(index), "w")		
+	file.Write(MoreClipboards[index])
+	file.Close()
+}
+
+MoreClipboardsUtil_GetClipboardFilePath(ByRef index)
+{
+	global MoreClipboardsDir
+	return (MoreClipboardsDir)"\Clipboard"(index)
 }
