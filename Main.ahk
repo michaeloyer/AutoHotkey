@@ -1,3 +1,7 @@
+;******************
+;*** Directives ***
+;******************
+
 #SingleInstance Force
 #NoEnv
 #Warn UseUnsetGlobal, Off
@@ -14,11 +18,12 @@ SetTitleMatchMode, 2
 
 ;Preserve 10 Clipboards variables if script gets restarted as opposed to reloaded
 If %0% <> 0
-	TenClipboardsReloadVariables(1)
+	MoreClipboardsReloadVariables(1)
+
+#Include <MoreClipboards>
 
 #Include %A_ScriptDir%\Scripts
 #Include CaseText.ahk
-#Include Ten Clipboards.ahk
 #Include QuickDataEntry.ahk
 
 #Include %A_ScriptDir%\Hotkeys
@@ -33,46 +38,46 @@ NumLock & NumpadMult::Send {Volume_Mute}
 #Hotstring EndChars `t`n
 
 ScrollLock & NumLock::Reload
-NumLock & ScrollLock::Run, % """" . A_AhkPath . """ /restart """ . A_ScriptFullPath . """ " . TenClipboardsPassParameters()
+NumLock & ScrollLock::Run, % """" . A_AhkPath . """ /restart """ . A_ScriptFullPath . """ " . MoreClipboardsPassParameters()
 
 ;Open the Clipboard GUI
-Alt & `::TenClipboardsOpenGUI()
+Alt & `::MoreClipboardsOpenGUI()
 
 ;Copy to the Ten Clipboards (Ctrl + Number)
-^1:: TenClipboardsCopy(1)
-^2:: TenClipboardsCopy(2)
-^3:: TenClipboardsCopy(3)
-^4:: TenClipboardsCopy(4)
-^5:: TenClipboardsCopy(5)
-^6:: TenClipboardsCopy(6)
-^7:: TenClipboardsCopy(7)
-^8:: TenClipboardsCopy(8)
-^9:: TenClipboardsCopy(9)
-^0:: TenClipboardsCopy(10)
+^1:: MoreClipboardsCopy(1)
+^2:: MoreClipboardsCopy(2)
+^3:: MoreClipboardsCopy(3)
+^4:: MoreClipboardsCopy(4)
+^5:: MoreClipboardsCopy(5)
+^6:: MoreClipboardsCopy(6)
+^7:: MoreClipboardsCopy(7)
+^8:: MoreClipboardsCopy(8)
+^9:: MoreClipboardsCopy(9)
+^0:: MoreClipboardsCopy(10)
 
 ;Send Text from the Ten Clipboards (Alt + Number)
-!1:: TenClipboardsSend(1)
-!2:: TenClipboardsSend(2)
-!3:: TenClipboardsSend(3)
-!4:: TenClipboardsSend(4)
-!5:: TenClipboardsSend(5)
-!6:: TenClipboardsSend(6)
-!7:: TenClipboardsSend(7)
-!8:: TenClipboardsSend(8)
-!9:: TenClipboardsSend(9)
-!0:: TenClipboardsSend(10)
+!1:: MoreClipboardsSend(1)
+!2:: MoreClipboardsSend(2)
+!3:: MoreClipboardsSend(3)
+!4:: MoreClipboardsSend(4)
+!5:: MoreClipboardsSend(5)
+!6:: MoreClipboardsSend(6)
+!7:: MoreClipboardsSend(7)
+!8:: MoreClipboardsSend(8)
+!9:: MoreClipboardsSend(9)
+!0:: MoreClipboardsSend(10)
 
 ;Send Literal Text from the Clipboards (Shift + Alt + Number)
-+!1:: TenClipboardsSendRaw(1)
-+!2:: TenClipboardsSendRaw(2)
-+!3:: TenClipboardsSendRaw(3)
-+!4:: TenClipboardsSendRaw(4)
-+!5:: TenClipboardsSendRaw(5)
-+!6:: TenClipboardsSendRaw(6)
-+!7:: TenClipboardsSendRaw(7)
-+!8:: TenClipboardsSendRaw(8)
-+!9:: TenClipboardsSendRaw(9)
-+!0:: TenClipboardsSendRaw(10)
++!1:: MoreClipboardsSendRaw(1)
++!2:: MoreClipboardsSendRaw(2)
++!3:: MoreClipboardsSendRaw(3)
++!4:: MoreClipboardsSendRaw(4)
++!5:: MoreClipboardsSendRaw(5)
++!6:: MoreClipboardsSendRaw(6)
++!7:: MoreClipboardsSendRaw(7)
++!8:: MoreClipboardsSendRaw(8)
++!9:: MoreClipboardsSendRaw(9)
++!0:: MoreClipboardsSendRaw(10)
 
 Insert::QuickDataEntry_SendNextQuickText()
 Numlock & Insert::QuickDataEntry_GUI()

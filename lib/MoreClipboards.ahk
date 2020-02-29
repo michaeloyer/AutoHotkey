@@ -1,19 +1,19 @@
-﻿;**********************
-;*** TEN CLIPBOARDS ***
-;**********************
+﻿;***********************
+;*** MORE CLIPBOARDS ***
+;***********************
 
 /*
 ;'''''''''''''''''''''''''''
 ;''' Available Functions '''
 ;'''''''''''''''''''''''''''
 
-TenClipboardsCopy(int) (1 - Clipboard Count)
-TenClipboardsPaste(int) (1 - Clipboard Count)
-TenClipboardsSend(int) (1 - Clipboard Count)
-TenClipboardsSendRaw(int) (1 - Clipboard Count)
-TenClipboardsGUI() (Launch Gui)
-TenClipboardsReloadVariables(FirstReloadVariable:=1)
-TenClipboardsPassParameters()
+MoreClipboardsCopy(int) (1 - Clipboard Count)
+MoreClipboardsPaste(int) (1 - Clipboard Count)
+MoreClipboardsSend(int) (1 - Clipboard Count)
+MoreClipboardsSendRaw(int) (1 - Clipboard Count)
+MoreClipboardsGUI() (Launch Gui)
+MoreClipboardsReloadVariables(FirstReloadVariable:=1)
+MoreClipboardsPassParameters()
 
 
 ;''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -22,77 +22,77 @@ TenClipboardsPassParameters()
 
 To restart the script with all clipboards values intact you can use the following line in place of Reload:
 
-Run, % """" . A_AhkPath . """ /restart """ . A_ScriptFullPath . """ " . TenClipboardsPassParameters()
+Run, % """" . A_AhkPath . """ /restart """ . A_ScriptFullPath . """ " . MoreClipboardsPassParameters()
 
 
 This should go in your Auto-Exectue Section:
 
 ;Preserve 10 Clipboards variables if script gets restarted as opposed to reloaded 
 If %0% <> 0
-	TenClipboardsReloadVariables(1)
+	MoreClipboardsReloadVariables(1)
 
 ;'''''''''''''''''''''''''''''''''''''
 ;''' Default Hotkey Configurations '''
 ;'''''''''''''''''''''''''''''''''''''
 
 ;Open the Clipboard GUI
-Alt & `::TenClipboardsOpenGUI()
+Alt & `::MoreClipboardsOpenGUI()
 
-;Copy to the Ten Clipboards (Ctrl + Number)
-^1:: TenClipboardsCopy(1)
-^2:: TenClipboardsCopy(2)
-^3:: TenClipboardsCopy(3)
-^4:: TenClipboardsCopy(4)
-^5:: TenClipboardsCopy(5)
-^6:: TenClipboardsCopy(6)
-^7:: TenClipboardsCopy(7)
-^8:: TenClipboardsCopy(8)
-^9:: TenClipboardsCopy(9)
-^0:: TenClipboardsCopy(10)
+;Copy to Clipboards (Ctrl + Number)
+^1:: MoreClipboardsCopy(1)
+^2:: MoreClipboardsCopy(2)
+^3:: MoreClipboardsCopy(3)
+^4:: MoreClipboardsCopy(4)
+^5:: MoreClipboardsCopy(5)
+^6:: MoreClipboardsCopy(6)
+^7:: MoreClipboardsCopy(7)
+^8:: MoreClipboardsCopy(8)
+^9:: MoreClipboardsCopy(9)
+^0:: MoreClipboardsCopy(10)
 
-;Paste Text from the Ten Clipboards (Alt + Number)
-!1:: TenClipboardsPaste(1)
-!2:: TenClipboardsPaste(2)
-!3:: TenClipboardsPaste(3)
-!4:: TenClipboardsPaste(4)
-!5:: TenClipboardsPaste(5)
-!6:: TenClipboardsPaste(6)
-!7:: TenClipboardsPaste(7)
-!8:: TenClipboardsPaste(8)
-!9:: TenClipboardsPaste(9)
-!0:: TenClipboardsPaste(10)
+;Paste from Clipboards (Alt + Number)
+!1:: MoreClipboardsPaste(1)
+!2:: MoreClipboardsPaste(2)
+!3:: MoreClipboardsPaste(3)
+!4:: MoreClipboardsPaste(4)
+!5:: MoreClipboardsPaste(5)
+!6:: MoreClipboardsPaste(6)
+!7:: MoreClipboardsPaste(7)
+!8:: MoreClipboardsPaste(8)
+!9:: MoreClipboardsPaste(9)
+!0:: MoreClipboardsPaste(10)
 
-;Send Text from the Ten Clipboards (Ctrl + Alt + Number)
-^!1:: TenClipboardsSend(1)
-^!2:: TenClipboardsSend(2)
-^!3:: TenClipboardsSend(3)
-^!4:: TenClipboardsSend(4)
-^!5:: TenClipboardsSend(5)
-^!6:: TenClipboardsSend(6)
-^!7:: TenClipboardsSend(7)
-^!8:: TenClipboardsSend(8)
-^!9:: TenClipboardsSend(9)
-^!0:: TenClipboardsSend(10)
+;Send Text from Clipboards (Ctrl + Alt + Number)
+^!1:: MoreClipboardsSend(1)
+^!2:: MoreClipboardsSend(2)
+^!3:: MoreClipboardsSend(3)
+^!4:: MoreClipboardsSend(4)
+^!5:: MoreClipboardsSend(5)
+^!6:: MoreClipboardsSend(6)
+^!7:: MoreClipboardsSend(7)
+^!8:: MoreClipboardsSend(8)
+^!9:: MoreClipboardsSend(9)
+^!0:: MoreClipboardsSend(10)
 
-;Send Literal Text from the Clipboards (Shift + Alt + Number)
-+!1:: TenClipboardsSendRaw(1)
-+!2:: TenClipboardsSendRaw(2)
-+!3:: TenClipboardsSendRaw(3)
-+!4:: TenClipboardsSendRaw(4)
-+!5:: TenClipboardsSendRaw(5)
-+!6:: TenClipboardsSendRaw(6)
-+!7:: TenClipboardsSendRaw(7)
-+!8:: TenClipboardsSendRaw(8)
-+!9:: TenClipboardsSendRaw(9)
-+!0:: TenClipboardsSendRaw(10)
+;Send Literal Text from Clipboards (Shift + Alt + Number)
++!1:: MoreClipboardsSendRaw(1)
++!2:: MoreClipboardsSendRaw(2)
++!3:: MoreClipboardsSendRaw(3)
++!4:: MoreClipboardsSendRaw(4)
++!5:: MoreClipboardsSendRaw(5)
++!6:: MoreClipboardsSendRaw(6)
++!7:: MoreClipboardsSendRaw(7)
++!8:: MoreClipboardsSendRaw(8)
++!9:: MoreClipboardsSendRaw(9)
++!0:: MoreClipboardsSendRaw(10)
 
 */
 
-TenClipboards := []
+MoreClipboards := []
 Loop, 10 ; Default Clipboard Count
-	TenClipboards.Push("")
+	MoreClipboards.Push("")
 
-TenClipboardsCopy(ByRef index)
+MoreClipboardsCopy(ByRef index)
 {
 	global
 	local ClipboardTemp := ClipboardAll
@@ -103,52 +103,52 @@ TenClipboardsCopy(ByRef index)
 	if not ErrorLevel
 	{
 		if WinActive("ahk_class XLMAIN")
-			PRIVATE_TenClipboards_Excel_To_Clipboard()
+			PRIVATE_MoreClipboards_Excel_To_Clipboard()
 		
-		TenClipboards[index] := Clipboard		
+		MoreClipboards[index] := Clipboard		
 	}
 
 	Clipboard := ClipboardTemp
 	ClipboardTemp := ""
 }
 
-TenClipboardsIndexToPasteOnChange := 0
-TenClipboardsPasteOnClipboardChange(Type) 
+MoreClipboardsIndexToPasteOnChange := 0
+MoreClipboardsPasteOnClipboardChange(Type) 
 {
 	global
-	if (TenClipboardsIndexToPasteOnChange) {
+	if (MoreClipboardsIndexToPasteOnChange) {
 		Send, ^v
 		Sleep 25
-		TenClipboardsIndexToPasteOnChange := 0
+		MoreClipboardsIndexToPasteOnChange := 0
 		Clipboard := ClipboardTemp
 	}
 }
-OnClipboardChange("TenClipboardsPasteOnClipboardChange")
+OnClipboardChange("MoreClipboardsPasteOnClipboardChange")
 
 
-TenClipboardsPaste(ByRef index)
+MoreClipboardsPaste(ByRef index)
 {
 	global
 	ClipboardTemp := ClipboardAll
-	TenClipboardsIndexToPasteOnChange := 0
+	MoreClipboardsIndexToPasteOnChange := 0
 	Clipboard := ""
-	TenClipboardsIndexToPasteOnChange := index
-	Clipboard := TenClipboards[index]
+	MoreClipboardsIndexToPasteOnChange := index
+	Clipboard := MoreClipboards[index]
 }
 
-TenClipboardsSend(ByRef index)
+MoreClipboardsSend(ByRef index)
 {
 	global
-	Send % TenClipboards[index]
+	Send % MoreClipboards[index]
 }
 
-TenClipboardsSendRaw(ByRef index)
+MoreClipboardsSendRaw(ByRef index)
 {
 	global
-	SendRaw % TenClipboards[index]
+	SendRaw % MoreClipboards[index]
 }
 
-TenClipboardsOpenGUI()
+MoreClipboardsOpenGUI()
 {
 	global
 	local GuiTitle := "Set Clipboards Text"
@@ -163,26 +163,26 @@ TenClipboardsOpenGUI()
 	; If the window isn't open, it will create the Gui menu and display it.
 	
 	xGui := 9,  yGui := 0,  wGui := 600,  hGui := 20,  wButton := wGui/5,  ySection := 40
-	Gui, TenClipboards:New,, %GuiTitle%
+	Gui, MoreClipboards:New,, %GuiTitle%
 	Gui, Add, Text, %           " x"(xGui)" y"( 6+yGui)" w"(wGui) " h"(hGui) , % "  Windows Clipboard"
 	Gui, Add, Edit, % "vClipboard x"(xGui)" y"(21+yGui)" w"(wGui) " r3", % Clipboard
-	Loop, % TenClipboards.Length()
+	Loop, % MoreClipboards.Length()
 	{
 		yGui += ySection
 		Gui, Add, Text, %                             " x"(xGui)" y"( 6+yGui)" w"(wGui) " h"(hGui) , % " Clipboard "(A_Index)
-		Gui, Add, Edit, % "vGuiTenClipboards"(A_Index)" x"(xGui)" y"(21+yGui)" w"(wGui) " h"(hGui) , % TenClipboards[A_Index]
+		Gui, Add, Edit, % "vGuiMoreClipboards"(A_Index)" x"(xGui)" y"(21+yGui)" w"(wGui) " h"(hGui) , % MoreClipboards[A_Index]
 	}
 	yGui += ySection
 	Gui, Add, Button, % " Default x"(9+(wGui/2)-(wButton/2))" y"(6+yGui)" w"(wButton)" h30", SET CLIPBOARDS
 	Gui, Show
 }
 
-TenClipboardsButtonSETCLIPBOARDS:
+MoreClipboardsButtonSETCLIPBOARDS:
 	Gui, Submit
-	Loop, % TenClipboards.Length() 
+	Loop, % MoreClipboards.Length() 
 	{
-		TenClipboards[A_Index] := GuiTenClipboards%A_Index%
-		GuiTenClipboards%A_Index% := ""
+		MoreClipboards[A_Index] := GuiMoreClipboards%A_Index%
+		GuiMoreClipboards%A_Index% := ""
 	}
 	return
 
@@ -191,32 +191,32 @@ Used for resetting a script without having to lose your 10 Clipboards values
 even when a clipboard is empty it will pass an empty string, so 10 variables
 are passed into the reloaded script.
 
-TenClipboardsReloadVariables should be in your main script's auto-execute section.
+MoreClipboardsReloadVariables should be in your main script's auto-execute section.
 
 For more information see "parameters passed into a script" in the AutoHotkey Help Index or search for 
 "Passing Command Line Parameters to a Script".
 */
 
 ;Change FirstReloadVariable if you are passing other variables first ahead of the 10 Clip# variables
-TenClipboardsReloadVariables(FirstReloadVariable:=1) 
+MoreClipboardsReloadVariables(FirstReloadVariable:=1) 
 {
 	global
-	Loop, % TenClipboards.Length()
+	Loop, % MoreClipboards.Length()
 	{
 		PassParamNum := A_Index + FirstReloadVariable - 1
-		TenClipboards[%A_LoopField%] := %PassParamNum%
+		MoreClipboards[%A_LoopField%] := %PassParamNum%
 	}
 }
 
-TenClipboardsPassParameters()
+MoreClipboardsPassParameters()
 {
 	global
 	local SingleClipboard := ""
 
-	Loop, % TenClipboards.Length()
+	Loop, % MoreClipboards.Length()
 	{
-		SingleClipboard := TenClipboards[A_Index]
-		PassParameters .= " " . PRIVATE_TenClipboards_CleanParameterPassingString(%SingleClipboard%)
+		SingleClipboard := MoreClipboards[A_Index]
+		PassParameters .= " " . PRIVATE_MoreClipboards_CleanParameterPassingString(%SingleClipboard%)
 	}
 
 	return PassParameters
@@ -224,7 +224,7 @@ TenClipboardsPassParameters()
 
 ;Private Functions not intended to be used outside of this Script
 
-PRIVATE_TenClipboards_Excel_To_Clipboard()
+PRIVATE_MoreClipboards_Excel_To_Clipboard()
 {
 	global
 	StringReplace, Clipboard, Clipboard, `r`n , `n, All
@@ -232,7 +232,7 @@ PRIVATE_TenClipboards_Excel_To_Clipboard()
 		StringLeft, Clipboard, Clipboard, StrLen(Clipboard) - 1
 }
 
-PRIVATE_TenClipboards_CleanParameterPassingString(PassString) ;Backslashes Nullify Quotes and other Backslashes.  See the help file for more details.
+PRIVATE_MoreClipboards_CleanParameterPassingString(PassString) ;Backslashes Nullify Quotes and other Backslashes.  See the help file for more details.
 {
 	If InStr(PassString,"""") > 0 ;If the parameter being passed has a Quotation Mark or Backslash, the string will have to be put through these series of loops.
 	{		
