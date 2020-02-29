@@ -7,10 +7,10 @@
 ;''' Available Functions '''
 ;'''''''''''''''''''''''''''
 
-TenClipboardsCopy(int) (Must be 0 - 9)
-TenClipboardsPaste(int) (Must be 0 - 9)
-TenClipboardsSend(int) (Must be 0 - 9)
-TenClipboardsSendRaw(int) (Must be 0 - 9)
+TenClipboardsCopy(int) (1 - Clipboard Count)
+TenClipboardsPaste(int) (1 - Clipboard Count)
+TenClipboardsSend(int) (1 - Clipboard Count)
+TenClipboardsSendRaw(int) (1 - Clipboard Count)
 TenClipboardsGUI() (Launch Gui)
 TenClipboardsReloadVariables(FirstReloadVariable:=1)
 TenClipboardsPassParameters()
@@ -48,7 +48,7 @@ Alt & `::TenClipboardsOpenGUI()
 ^7:: TenClipboardsCopy(7)
 ^8:: TenClipboardsCopy(8)
 ^9:: TenClipboardsCopy(9)
-^0:: TenClipboardsCopy(0)
+^0:: TenClipboardsCopy(10)
 
 ;Paste Text from the Ten Clipboards (Alt + Number)
 !1:: TenClipboardsPaste(1)
@@ -60,7 +60,7 @@ Alt & `::TenClipboardsOpenGUI()
 !7:: TenClipboardsPaste(7)
 !8:: TenClipboardsPaste(8)
 !9:: TenClipboardsPaste(9)
-!0:: TenClipboardsPaste(0)
+!0:: TenClipboardsPaste(10)
 
 ;Send Text from the Ten Clipboards (Ctrl + Alt + Number)
 ^!1:: TenClipboardsSend(1)
@@ -72,7 +72,7 @@ Alt & `::TenClipboardsOpenGUI()
 ^!7:: TenClipboardsSend(7)
 ^!8:: TenClipboardsSend(8)
 ^!9:: TenClipboardsSend(9)
-^!0:: TenClipboardsSend(0)
+^!0:: TenClipboardsSend(10)
 
 ;Send Literal Text from the Clipboards (Shift + Alt + Number)
 +!1:: TenClipboardsSendRaw(1)
@@ -84,16 +84,18 @@ Alt & `::TenClipboardsOpenGUI()
 +!7:: TenClipboardsSendRaw(7)
 +!8:: TenClipboardsSendRaw(8)
 +!9:: TenClipboardsSendRaw(9)
-+!0:: TenClipboardsSendRaw(0)
++!0:: TenClipboardsSendRaw(10)
 
 */
 
+TenClipboards := []
+Loop, 10 ; Default Clipboard Count
+	TenClipboards.Push("")
 
-
-TenClipboardsCopy(ByRef ButtonIndex)
+TenClipboardsCopy(ByRef index)
 {
 	global
-	local ClipboardTemp := Clipboard
+	local ClipboardTemp := ClipboardAll
 	Clipboard := ""
 	Send ^c
 	ClipWait, 1
@@ -103,80 +105,85 @@ TenClipboardsCopy(ByRef ButtonIndex)
 		if WinActive("ahk_class XLMAIN")
 			PRIVATE_TenClipboards_Excel_To_Clipboard()
 		
-		TenClipboards_Clip%ButtonIndex% := Clipboard		
+		TenClipboards[index] := Clipboard		
 	}
 
 	Clipboard := ClipboardTemp
 	ClipboardTemp := ""
 }
 
-TenClipboardsToPasteOnChange := 0
+TenClipboardsIndexToPasteOnChange := 0
 TenClipboardsPasteOnClipboardChange(Type) 
 {
 	global
-	if (TenClipboardsToPasteOnChange) {
+	if (TenClipboardsIndexToPasteOnChange) {
 		Send, ^v
 		Sleep 25
-		TenClipboardsToPasteOnChange := 0
+		TenClipboardsIndexToPasteOnChange := 0
 		Clipboard := ClipboardTemp
 	}
 }
 OnClipboardChange("TenClipboardsPasteOnClipboardChange")
 
 
-TenClipboardsPaste(ByRef ButtonIndex)
+TenClipboardsPaste(ByRef index)
 {
 	global
 	ClipboardTemp := ClipboardAll
-	TenClipboardsToPasteOnChange := 0
+	TenClipboardsIndexToPasteOnChange := 0
 	Clipboard := ""
-	TenClipboardsToPasteOnChange := ButtonIndex
-	Clipboard := TenClipboards_Clip%ButtonIndex%
+	TenClipboardsIndexToPasteOnChange := index
+	Clipboard := TenClipboards[index]
 }
 
-TenClipboardsSend(ByRef ButtonIndex)
+TenClipboardsSend(ByRef index)
 {
 	global
-	Send % TenClipboards_Clip%ButtonIndex%
+	Send % TenClipboards[index]
 }
 
-TenClipboardsSendRaw(ByRef ButtonIndex)
+TenClipboardsSendRaw(ByRef index)
 {
 	global
-	SendRaw % TenClipboards_Clip%ButtonIndex%
+	SendRaw % TenClipboards[index]
 }
 
 TenClipboardsOpenGUI()
 {
 	global
-	local ClipboardLoops := 10
 	local GuiTitle := "Set Clipboards Text"
 	  ; This will stop the Gui window from resetting without saving your
 	  ; clipboards if you press this hotkey and it's already open and instead give the window focus. 
-	IfWinExist, %GuiTitle% ahk_class AutoHotkeyGUI
-		WinActivate
-	else
+	IfWinExist, %GuiTitle% ahk_class AutoHotkeyGUI 
 	{
-	  ; If the window isn't open, it will create the Gui menu and display it.
-		Gui, TenClipboards:New,, %GuiTitle%
-		xGui := 9,   yGui := 0,   wGui := 600,   hGui := 20,   wButton := wGui/5
-		Gui, Add, Text, %           " x"(xGui)" y"( 6+yGui)" w"(wGui) " h"(hGui) , % "  Windows Clipboard"
-		Gui, Add, Edit, % "vClipboard x"(xGui)" y"(21+yGui)" w"(wGui) " h"(hGui) " r1", % Clipboard
-		Loop, %ClipboardLoops%
-		{
-			yGui := ((A_Index)*40)
-			ButtonIndex := A_Index
-			ButtonIndex := A_Index=10 ? "0" : ButtonIndex
-			Gui, Add, Text, %                     " x"(xGui)" y"( 6+yGui)" w"(wGui) " h"(hGui) , % " Clipboard "(ButtonIndex)
-			Gui, Add, Edit, % "vTenClipboards_Clip"(ButtonIndex)" x"(xGui)" y"(21+yGui)" w"(wGui) " h"(hGui) , %   TenClipboards_Clip%ButtonIndex%
-		}
-		Gui, Add, Button, % " Default x"(9+(wGui/2)-(wButton/2))" y"(6+((ClipboardLoops+1)*40))" w"(wButton)" h30", SET CLIPBOARDS
-		Gui, Show
+		WinActivate
+		return
 	}
+	
+	; If the window isn't open, it will create the Gui menu and display it.
+	
+	xGui := 9,  yGui := 0,  wGui := 600,  hGui := 20,  wButton := wGui/5,  ySection := 40
+	Gui, TenClipboards:New,, %GuiTitle%
+	Gui, Add, Text, %           " x"(xGui)" y"( 6+yGui)" w"(wGui) " h"(hGui) , % "  Windows Clipboard"
+	Gui, Add, Edit, % "vClipboard x"(xGui)" y"(21+yGui)" w"(wGui) " r3", % Clipboard
+	Loop, % TenClipboards.Length()
+	{
+		yGui += ySection
+		Gui, Add, Text, %                             " x"(xGui)" y"( 6+yGui)" w"(wGui) " h"(hGui) , % " Clipboard "(A_Index)
+		Gui, Add, Edit, % "vGuiTenClipboards"(A_Index)" x"(xGui)" y"(21+yGui)" w"(wGui) " h"(hGui) , % TenClipboards[A_Index]
+	}
+	yGui += ySection
+	Gui, Add, Button, % " Default x"(9+(wGui/2)-(wButton/2))" y"(6+yGui)" w"(wButton)" h30", SET CLIPBOARDS
+	Gui, Show
 }
 
 TenClipboardsButtonSETCLIPBOARDS:
 	Gui, Submit
+	Loop, % TenClipboards.Length() 
+	{
+		TenClipboards[A_Index] := GuiTenClipboards%A_Index%
+		GuiTenClipboards%A_Index% := ""
+	}
 	return
 
 /*
@@ -194,28 +201,25 @@ For more information see "parameters passed into a script" in the AutoHotkey Hel
 TenClipboardsReloadVariables(FirstReloadVariable:=1) 
 {
 	global
-	local Clips := 1234567890
-	local PassParamNum := 0
-	Loop, Parse, Clips
+	Loop, % TenClipboards.Length()
 	{
 		PassParamNum := A_Index + FirstReloadVariable - 1
-		TenClipboards_Clip%A_LoopField% := %PassParamNum%
+		TenClipboards[%A_LoopField%] := %PassParamNum%
 	}
 }
 
 TenClipboardsPassParameters()
 {
 	global
-	local PassParameters := ""
-	local Clips := 1234567890
 	local SingleClipboard := ""
 
-	Loop, Parse, Clips
+	Loop, % TenClipboards.Length()
 	{
-		SingleClipboard := "TenClipboards_Clip" . A_LoopField
+		SingleClipboard := TenClipboards[A_Index]
 		PassParameters .= " " . PRIVATE_TenClipboards_CleanParameterPassingString(%SingleClipboard%)
 	}
-	Return PassParameters
+
+	return PassParameters
 }
 
 ;Private Functions not intended to be used outside of this Script
