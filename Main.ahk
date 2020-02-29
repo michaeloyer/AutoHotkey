@@ -4,7 +4,6 @@
 
 #SingleInstance Force
 #NoEnv
-#Warn UseUnsetGlobal, Off
 
 SendMode Input
 SetWorkingDir %A_ScriptDir%

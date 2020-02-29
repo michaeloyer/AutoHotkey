@@ -165,11 +165,11 @@ MoreClipboardsOpenGUI()
 	xGui := 9,  yGui := 0,  wGui := 600,  hGui := 20,  wButton := wGui/5,  ySection := 40
 	Gui, MoreClipboards:New,, %GuiTitle%
 	Gui, Add, Text, %           " x"(xGui)" y"( 6+yGui)" w"(wGui) " h"(hGui) , % "  Windows Clipboard"
-	Gui, Add, Edit, % "vClipboard x"(xGui)" y"(21+yGui)" w"(wGui) " r3", % Clipboard
+	Gui, Add, Edit, % "vClipboard x"(xGui)" y"(21+yGui)" w"(wGui) " r1", % Clipboard
 	Loop, % MoreClipboards.Length()
 	{
 		yGui += ySection
-		Gui, Add, Text, %                             " x"(xGui)" y"( 6+yGui)" w"(wGui) " h"(hGui) , % " Clipboard "(A_Index)
+		Gui, Add, Text, %                              " x"(xGui)" y"( 6+yGui)" w"(wGui) " h"(hGui) , % " Clipboard "(A_Index)
 		Gui, Add, Edit, % "vGuiMoreClipboards"(A_Index)" x"(xGui)" y"(21+yGui)" w"(wGui) " h"(hGui) , % MoreClipboards[A_Index]
 	}
 	yGui += ySection
