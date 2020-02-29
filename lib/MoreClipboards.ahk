@@ -46,29 +46,17 @@ Alt & `::MoreClipboardsOpenGUI()
 !9:: MoreClipboardsPaste(9)
 !0:: MoreClipboardsPaste(10)
 
-;Send Text from Clipboards (Ctrl + Alt + Number)
-^!1:: MoreClipboardsSend(1)
-^!2:: MoreClipboardsSend(2)
-^!3:: MoreClipboardsSend(3)
-^!4:: MoreClipboardsSend(4)
-^!5:: MoreClipboardsSend(5)
-^!6:: MoreClipboardsSend(6)
-^!7:: MoreClipboardsSend(7)
-^!8:: MoreClipboardsSend(8)
-^!9:: MoreClipboardsSend(9)
-^!0:: MoreClipboardsSend(10)
-
-;Send Literal Text from Clipboards (Shift + Alt + Number)
-+!1:: MoreClipboardsSendRaw(1)
-+!2:: MoreClipboardsSendRaw(2)
-+!3:: MoreClipboardsSendRaw(3)
-+!4:: MoreClipboardsSendRaw(4)
-+!5:: MoreClipboardsSendRaw(5)
-+!6:: MoreClipboardsSendRaw(6)
-+!7:: MoreClipboardsSendRaw(7)
-+!8:: MoreClipboardsSendRaw(8)
-+!9:: MoreClipboardsSendRaw(9)
-+!0:: MoreClipboardsSendRaw(10)
+;Send Text from Clipboards (Shift + Alt + Number)
++!1:: MoreClipboardsSend(1)
++!2:: MoreClipboardsSend(2)
++!3:: MoreClipboardsSend(3)
++!4:: MoreClipboardsSend(4)
++!5:: MoreClipboardsSend(5)
++!6:: MoreClipboardsSend(6)
++!7:: MoreClipboardsSend(7)
++!8:: MoreClipboardsSend(8)
++!9:: MoreClipboardsSend(9)
++!0:: MoreClipboardsSend(10)
 
 */
 
@@ -133,12 +121,6 @@ MoreClipboardsSend(ByRef index)
 {
 	global
 	Send % MoreClipboards[index]
-}
-
-MoreClipboardsSendRaw(ByRef index)
-{
-	global
-	SendRaw % MoreClipboards[index]
 }
 
 MoreClipboardsOpenGUI()
