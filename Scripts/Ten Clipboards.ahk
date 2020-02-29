@@ -8,6 +8,7 @@
 ;'''''''''''''''''''''''''''
 
 TenClipboardsCopy(int) (Must be 0 - 9)
+TenClipboardsPaste(int) (Must be 0 - 9)
 TenClipboardsSend(int) (Must be 0 - 9)
 TenClipboardsSendRaw(int) (Must be 0 - 9)
 TenClipboardsGUI() (Launch Gui)
@@ -49,17 +50,29 @@ Alt & `::TenClipboardsOpenGUI()
 ^9:: TenClipboardsCopy(9)
 ^0:: TenClipboardsCopy(0)
 
-;Send Text from the Ten Clipboards (Alt + Number)
-!1:: TenClipboardsSend(1)
-!2:: TenClipboardsSend(2)
-!3:: TenClipboardsSend(3)
-!4:: TenClipboardsSend(4)
-!5:: TenClipboardsSend(5)
-!6:: TenClipboardsSend(6)
-!7:: TenClipboardsSend(7)
-!8:: TenClipboardsSend(8)
-!9:: TenClipboardsSend(9)
-!0:: TenClipboardsSend(0)
+;Paste Text from the Ten Clipboards (Alt + Number)
+!1:: TenClipboardsPaste(1)
+!2:: TenClipboardsPaste(2)
+!3:: TenClipboardsPaste(3)
+!4:: TenClipboardsPaste(4)
+!5:: TenClipboardsPaste(5)
+!6:: TenClipboardsPaste(6)
+!7:: TenClipboardsPaste(7)
+!8:: TenClipboardsPaste(8)
+!9:: TenClipboardsPaste(9)
+!0:: TenClipboardsPaste(0)
+
+;Send Text from the Ten Clipboards (Ctrl + Alt + Number)
+^!1:: TenClipboardsSend(1)
+^!2:: TenClipboardsSend(2)
+^!3:: TenClipboardsSend(3)
+^!4:: TenClipboardsSend(4)
+^!5:: TenClipboardsSend(5)
+^!6:: TenClipboardsSend(6)
+^!7:: TenClipboardsSend(7)
+^!8:: TenClipboardsSend(8)
+^!9:: TenClipboardsSend(9)
+^!0:: TenClipboardsSend(0)
 
 ;Send Literal Text from the Clipboards (Shift + Alt + Number)
 +!1:: TenClipboardsSendRaw(1)
@@ -75,18 +88,6 @@ Alt & `::TenClipboardsOpenGUI()
 
 */
 
-;CURRENTY BROKEN
-;Paste Text from the Ten Clipboards (Alt + Number)
-;!1:: TenClipboardsPaste(1)
-;!2:: TenClipboardsPaste(2)
-;!3:: TenClipboardsPaste(3)
-;!4:: TenClipboardsPaste(4)
-;!5:: TenClipboardsPaste(5)
-;!6:: TenClipboardsPaste(6)
-;!7:: TenClipboardsPaste(7)
-;!8:: TenClipboardsPaste(8)
-;!9:: TenClipboardsPaste(9)
-;!0:: TenClipboardsPaste(0)
 
 
 TenClipboardsCopy(ByRef ButtonIndex)
@@ -109,36 +110,28 @@ TenClipboardsCopy(ByRef ButtonIndex)
 	ClipboardTemp := ""
 }
 
-/* CURRENTLY BROKEN
-TenClipboardsPaste(ByRef ButtonIndex)
+TenClipboardsToPasteOnChange := 0
+TenClipboardsPasteOnClipboardChange(Type) 
 {
 	global
-	Local ClipboardTemp := Clipboard
-	MsgBox % TenClipboards_Clip%ButtonIndex%
-	Clipboard := TenClipboards_Clip%ButtonIndex%
-	Sleep 20
-	MsgBox % Clipboard
-	Send ^v
-	Clipboard := ClipboardTemp
-	ClipboardTemp := ""
+	if (TenClipboardsToPasteOnChange) {
+		Send, ^v
+		Sleep 25
+		TenClipboardsToPasteOnChange := 0
+		Clipboard := ClipboardTemp
+	}
 }
-*/
+OnClipboardChange("TenClipboardsPasteOnClipboardChange")
+
 
 TenClipboardsPaste(ByRef ButtonIndex)
 {
 	global
-	local ClipboardTemp := ClipboardAll
-	Loop
-	{
-	if Clipboard = ""
-		break
-	else
-		Clipboard := ""
-	}
+	ClipboardTemp := ClipboardAll
+	TenClipboardsToPasteOnChange := 0
+	Clipboard := ""
+	TenClipboardsToPasteOnChange := ButtonIndex
 	Clipboard := TenClipboards_Clip%ButtonIndex%
-	if Clipboard <> "" and Var <> ""
-		Send, ^v
-	Clipboard := ClipboardTemp
 }
 
 TenClipboardsSend(ByRef ButtonIndex)
@@ -259,7 +252,7 @@ PRIVATE_TenClipboards_CleanParameterPassingString(PassString) ;Backslashes Nulli
 		While % SubStr(PassString, -Counter, 1) = "\" And StrLen(PassString) > Counter
 			Counter++
 		
-		PassString .= SubStr(PassString, -(Counter - 1), Counter)
+		PassString .= SubStr(PassString, - (Counter - 1), Counter)
 	}
 	
 	PassString := """" . PassString . """" ;Put 1 set of quotation marks around the PassString.
