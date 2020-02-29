@@ -57,7 +57,7 @@ MoreClipboardsPasteOnClipboardChange(Type)
 	global
 	if (MoreClipboardsIndexToPasteOnChange) {
 		Send, ^v
-		Sleep 25
+		Sleep 100
 		MoreClipboardsIndexToPasteOnChange := 0
 		Clipboard := ClipboardTemp
 	}
