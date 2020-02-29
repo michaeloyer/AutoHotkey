@@ -19,7 +19,7 @@ If %0% <> 0
 #Include CaseText.ahk
 #Include Script Building.ahk
 #Include Ten Clipboards.ahk
-#Include Quick Data Entry.ahk
+#Include QuickDataEntry.ahk
 
 Pause::Suspend
 NumLock & NumpadAdd::Send {Volume_Up}
