@@ -100,13 +100,8 @@ MoreClipboardsCopy(ByRef index)
 	Send ^c
 	ClipWait, 1
 	
-	if not ErrorLevel
-	{
-		if WinActive("ahk_class XLMAIN")
-			PRIVATE_MoreClipboards_Excel_To_Clipboard()
-		
-		MoreClipboards[index] := Clipboard		
-	}
+	if WinActive("ahk_class XLMAIN")
+		ClipText := RegExReplace(ClipText, "`r(?=`n)|`n$" "")
 
 	Clipboard := ClipboardTemp
 	ClipboardTemp := ""
@@ -224,13 +219,6 @@ MoreClipboardsPassParameters()
 
 ;Private Functions not intended to be used outside of this Script
 
-PRIVATE_MoreClipboards_Excel_To_Clipboard()
-{
-	global
-	StringReplace, Clipboard, Clipboard, `r`n , `n, All
-	if SubStr(Clipboard,0,1) = Chr(10) ;Linefeed Character
-		StringLeft, Clipboard, Clipboard, StrLen(Clipboard) - 1
-}
 
 PRIVATE_MoreClipboards_CleanParameterPassingString(PassString) ;Backslashes Nullify Quotes and other Backslashes.  See the help file for more details.
 {
