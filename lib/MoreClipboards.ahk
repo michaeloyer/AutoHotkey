@@ -94,19 +94,17 @@ MoreClipboardsOpenGUI()
 	}
 	
 	; If the window isn't open, it will create the Gui menu and display it.
-	xGui := 9,  yGui := 0,  wGui := 600,  hGui := 20,  wButton := wGui/5,  ySection := 40
+	wGui := 600,  wButton := wGui/5
 	Gui, MoreClipboards:New,, %GuiTitle%
-	Gui, Add, Text, %           " x"(xGui)" y"( 6+yGui)" w"(wGui) " h"(hGui) , % "  Windows Clipboard"
-	Gui, Add, Edit, % "vClipboard x"(xGui)" y"(21+yGui)" w"(wGui) " r1", % Clipboard
+	Gui, Add, Text, %           " x9 y6    w"(wGui), % "  Windows Clipboard"
+	Gui, Add, Edit, % "vClipboard xp yp+15 wp r1", % Clipboard
 	Loop, % MoreClipboards.Length()
 	{
-		yGui += ySection
-		Gui, Add, Text, % "                              x"(xGui)" y"( 6+yGui)" w"(wGui) " h"(hGui) , % " Clipboard "(A_Index)
-		Gui, Add, Edit, % "vGuiMoreClipboards"(A_Index)" x"(xGui)" y"(21+yGui)" w"(wGui) " h"(hGui) , % MoreClipboards[A_Index]
+		Gui, Add, Text, % "                              xp yp+25 wp", % " Clipboard "(A_Index)
+		Gui, Add, Edit, % "vGuiMoreClipboards"(A_Index)" xp yp+15 wp", % MoreClipboards[A_Index]
 	}
-	yGui += ySection
-	Gui, Add, Button, % " Default x"(9+(wGui/2)-(wButton+10))" y"(6+yGui)" w"(wButton)" h30", SET CLIPBOARDS
-	Gui, Add, Button, % "         x"(9+(wGui/2)+10)"           y"(6+yGui)" w"(wButton)" h30", CLEAR
+	Gui, Add, Button, % " Default x"(9+(wGui/2)-(wButton+10))" yp+25 w"(wButton)" h30", SET CLIPBOARDS
+	Gui, Add, Button, % "         x"(9+(wGui/2)+10)"           yp    wp           hp ", CLEAR
 	Gui, Show
 }
 
