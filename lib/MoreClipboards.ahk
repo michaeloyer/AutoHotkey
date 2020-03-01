@@ -101,11 +101,12 @@ MoreClipboardsOpenGUI()
 	Loop, % MoreClipboards.Length()
 	{
 		yGui += ySection
-		Gui, Add, Text, %                              " x"(xGui)" y"( 6+yGui)" w"(wGui) " h"(hGui) , % " Clipboard "(A_Index)
+		Gui, Add, Text, % "                              x"(xGui)" y"( 6+yGui)" w"(wGui) " h"(hGui) , % " Clipboard "(A_Index)
 		Gui, Add, Edit, % "vGuiMoreClipboards"(A_Index)" x"(xGui)" y"(21+yGui)" w"(wGui) " h"(hGui) , % MoreClipboards[A_Index]
 	}
 	yGui += ySection
-	Gui, Add, Button, % " Default x"(9+(wGui/2)-(wButton/2))" y"(6+yGui)" w"(wButton)" h30", SET CLIPBOARDS
+	Gui, Add, Button, % " Default x"(9+(wGui/2)-(wButton+10))" y"(6+yGui)" w"(wButton)" h30", SET CLIPBOARDS
+	Gui, Add, Button, % "         x"(9+(wGui/2)+10)"           y"(6+yGui)" w"(wButton)" h30", CLEAR
 	Gui, Show
 }
 
@@ -119,6 +120,18 @@ MoreClipboardsButtonSETCLIPBOARDS()
 		GuiMoreClipboards%A_Index% := ""
 		MoreClipboards[A_Index] := content
 		MoreClipboardsUtil_WriteClipboardFile(A_Index, content)
+	}
+}
+
+MoreClipboardsButtonCLEAR() 
+{
+	global
+	Gui, Submit, NoHide
+	Loop, % MoreClipboards.Length() 
+	{
+		GuiControl,,GuiMoreClipboards%A_Index%,
+		MoreClipboards[A_Index] := ""
+		MoreClipboardsUtil_WriteClipboardFile(A_Index, "")
 	}
 }
 
