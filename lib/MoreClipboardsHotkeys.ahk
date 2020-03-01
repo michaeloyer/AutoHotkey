@@ -1,5 +1,5 @@
 ;Open the Clipboard GUI
-Alt & `::MoreClipboardsOpenGUI()
+Alt & `:: MoreClipboardsOpenGUI()
 
 ;Copy to Clipboards (Ctrl + Number)
 ^1:: MoreClipboardsCopy(1)
@@ -24,15 +24,3 @@ Alt & `::MoreClipboardsOpenGUI()
 !8:: MoreClipboardsPaste(8)
 !9:: MoreClipboardsPaste(9)
 !0:: MoreClipboardsPaste(10)
-
-;Send Text from Clipboards (Shift + Alt + Number)
-+!1:: MoreClipboardsSend(1)
-+!2:: MoreClipboardsSend(2)
-+!3:: MoreClipboardsSend(3)
-+!4:: MoreClipboardsSend(4)
-+!5:: MoreClipboardsSend(5)
-+!6:: MoreClipboardsSend(6)
-+!7:: MoreClipboardsSend(7)
-+!8:: MoreClipboardsSend(8)
-+!9:: MoreClipboardsSend(9)
-+!0:: MoreClipboardsSend(10)

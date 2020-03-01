@@ -19,14 +19,15 @@ MoreClipboardsPassParameters()
 
 MoreClipboards := []
 MoreClipboardsDir := (A_AppData)"\AutoHotkey\MoreClipboards"
+MoreClipboardsConfig := (MoreClipboardsDir)"\config.ini"
 FileCreateDir, %MoreClipboardsDir%
 
 ; Default Clipboard Count.
 ; Change the loop below if more are desired
 Loop, 10 
-{
 	MoreClipboards.Push(MoreClipboardsUtil_ReadClipboardFile(A_Index))
-}
+
+MoreClipboardsPasteMode := MoreClipboardsUtil_GetSetting("PasteMode", 1)
 
 MoreClipboardsCopy(ByRef index)
 {
@@ -67,17 +68,17 @@ OnClipboardChange("MoreClipboardsPasteOnClipboardChange")
 MoreClipboardsPaste(ByRef index)
 {
 	global
+	if MoreClipboardsPasteMode = 2 
+	{
+		Send, MoreClipboards[index]
+		return
+	}
+
 	ClipboardTemp := ClipboardAll
 	MoreClipboardsIndexToPasteOnChange := 0
 	Clipboard := ""
 	MoreClipboardsIndexToPasteOnChange := index
 	Clipboard := MoreClipboards[index]
-}
-
-MoreClipboardsSend(ByRef index)
-{
-	global
-	Send % MoreClipboards[index]
 }
 
 MoreClipboardsOpenGUI()
@@ -103,8 +104,11 @@ MoreClipboardsOpenGUI()
 		Gui, Add, Text, % "                              xp yp+25 wp", % " Clipboard "(A_Index)
 		Gui, Add, Edit, % "vGuiMoreClipboards"(A_Index)" xp yp+15 wp", % MoreClipboards[A_Index]
 	}
-	Gui, Add, Button, % " Default x"(9+(wGui/2)-(wButton+10))" yp+25 w"(wButton)" h30", SET CLIPBOARDS
-	Gui, Add, Button, % "         x"(9+(wGui/2)+10)"           yp    wp           hp ", CLEAR
+	Gui, Add, Text, % "xp yp+35", Paste Mode
+	Gui, Add, Radio, % "vMoreClipboardsPasteMode "(MoreClipboardsPasteMode == 1 ? "Checked" : "")" xp+65 yp", Paste
+	Gui, Add, Radio, % "xp+50 yp "(MoreClipboardsPasteMode == 2 ? "Checked" : ""), Send
+	Gui, Add, Button, % "Default x"(9+(wGui/2)-(wButton+10))" yp-10 w"(wButton)" h30", SET CLIPBOARDS
+	Gui, Add, Button, % "x"(9+(wGui/2)+10)" yp wp hp", CLEAR
 	Gui, Show
 }
 
@@ -119,6 +123,8 @@ MoreClipboardsButtonSETCLIPBOARDS()
 		MoreClipboards[A_Index] := content
 		MoreClipboardsUtil_WriteClipboardFile(A_Index, content)
 	}
+
+	MoreClipboardsUtil_SetSetting("PasteMode", MoreClipboardsPasteMode)
 }
 
 MoreClipboardsButtonCLEAR() 
@@ -186,4 +192,17 @@ MoreClipboardsUtil_GetClipboardFilePath(ByRef index)
 {
 	global MoreClipboardsDir
 	return (MoreClipboardsDir)"\Clipboard"(index)
+}
+
+MoreClipboardsUtil_SetSetting(ByRef setting, ByRef value)
+{
+	global MoreClipboardsConfig
+	IniWrite, %value%, %MoreClipboardsConfig%, "Settings", setting
+}
+
+MoreClipboardsUtil_GetSetting(ByRef setting, ByRef default)
+{
+	global MoreClipboardsConfig
+	IniRead, value, %MoreClipboardsConfig%, "Settings", setting, %default%
+	return value
 }
