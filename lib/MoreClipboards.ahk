@@ -27,7 +27,9 @@ FileCreateDir, %MoreClipboardsDir%
 Loop, 10 
 	MoreClipboards.Push(MoreClipboardsUtil_ReadClipboardFile(A_Index))
 
-MoreClipboardsPasteMode := MoreClipboardsUtil_GetSetting("PasteMode", 1)
+MoreClipboardsPasteMode_PASTE = 1
+MoreClipboardsPasteMode_SEND = 2
+MoreClipboardsPasteMode := MoreClipboardsUtil_GetSetting("PasteMode", MoreClipboardsPasteMode_PASTE)
 
 MoreClipboardsCopy(ByRef index)
 {
@@ -68,9 +70,9 @@ OnClipboardChange("MoreClipboardsPasteOnClipboardChange")
 MoreClipboardsPaste(ByRef index)
 {
 	global
-	if MoreClipboardsPasteMode = 2 
+	if MoreClipboardsPasteMode = %MoreClipboardsPasteMode_SEND%
 	{
-		Send, MoreClipboards[index]
+		Send, % MoreClipboards[index]
 		return
 	}
 
@@ -95,20 +97,20 @@ MoreClipboardsOpenGUI()
 	}
 	
 	; If the window isn't open, it will create the Gui menu and display it.
-	wGui := 600,  wButton := wGui/5
+
 	Gui, MoreClipboards:New,, %GuiTitle%
-	Gui, Add, Text, %           " x9 y6    w"(wGui), % "  Windows Clipboard"
+	Gui, Add, Text, % "x9 y6 w600", % "  Windows Clipboard"
 	Gui, Add, Edit, % "vClipboard xp yp+15 wp r1", % Clipboard
 	Loop, % MoreClipboards.Length()
 	{
-		Gui, Add, Text, % "                              xp yp+25 wp", % " Clipboard "(A_Index)
-		Gui, Add, Edit, % "vGuiMoreClipboards"(A_Index)" xp yp+15 wp", % MoreClipboards[A_Index]
+		Gui, Add, Text, % "xp yp+25 wp", % " Clipboard "(A_Index)
+		Gui, Add, Edit, % "xp yp+15 wp vGuiMoreClipboards"(A_Index), % MoreClipboards[A_Index]
 	}
 	Gui, Add, Text, % "xp yp+35", Paste Mode
-	Gui, Add, Radio, % "vMoreClipboardsPasteMode "(MoreClipboardsPasteMode == 1 ? "Checked" : "")" xp+65 yp", Paste
-	Gui, Add, Radio, % "xp+50 yp "(MoreClipboardsPasteMode == 2 ? "Checked" : ""), Send
-	Gui, Add, Button, % "Default x"(9+(wGui/2)-(wButton+10))" yp-10 w"(wButton)" h30", SET CLIPBOARDS
-	Gui, Add, Button, % "x"(9+(wGui/2)+10)" yp wp hp", CLEAR
+	Gui, Add, Radio, % "xp+65 yp vMoreClipboardsPasteMode "(MoreClipboardsPasteMode == MoreClipboardsPasteMode_PASTE ? "Checked" : ""), Paste
+	Gui, Add, Radio, % "xp+50 yp "(MoreClipboardsPasteMode == MoreClipboardsPasteMode_SEND ? "Checked" : ""), Send
+	Gui, Add, Button, % "x"(600-240)" yp-10 w120 h30", CLEAR`nCLIPBOARDS
+	Gui, Add, Button, % "xp+130 yp wp hp Default", SET`nCLIPBOARDS
 	Gui, Show
 }
 
@@ -127,7 +129,7 @@ MoreClipboardsButtonSETCLIPBOARDS()
 	MoreClipboardsUtil_SetSetting("PasteMode", MoreClipboardsPasteMode)
 }
 
-MoreClipboardsButtonCLEAR() 
+MoreClipboardsButtonCLEARCLIPBOARDS() 
 {
 	global
 	Gui, Submit, NoHide
@@ -140,37 +142,6 @@ MoreClipboardsButtonCLEAR()
 }
 
 ;Utility Functions not intended to be used outside of this Script
-
-MoreClipboardsUtil_CleanParameterPassingString(PassString) ;Backslashes Nullify Quotes and other Backslashes.  See the help file for more details.
-{
-	If InStr(PassString,"""") > 0 ;If the parameter being passed has a Quotation Mark or Backslash, the string will have to be put through these series of loops.
-	{		
-		SearchString := """"
-		;This while loop will find the maximum number of backslashes followed by one quotation mark.
-		While % InStr(PassString,"\" . SearchString) > 0
-			SearchString := "\" . SearchString
-		
-		;This loop adds a backslash to a series of backslashes followed by a quotation mark.
-		;By the end of the loop all back slashes in the 
-		Loop, % StrLen(SearchString)
-		{			
-			StringReplace, PassString, PassString, % SearchString, % "\" . SearchString, All
-			SearchString := SubStr(SearchString,2) ;Take Backslashes away one by one.
-		}
-	}
-	If Instr(PassString,"\") > 0 
-	{
-		Counter := 0
-		;Strings that have ending backslashes (one or more) will be taken care of in this while loop
-		While % SubStr(PassString, -Counter, 1) = "\" And StrLen(PassString) > Counter
-			Counter++
-		
-		PassString .= SubStr(PassString, - (Counter - 1), Counter)
-	}
-	
-	PassString := """" . PassString . """" ;Put 1 set of quotation marks around the PassString.
-	Return PassString
-}
 
 MoreClipboardsUtil_ReadClipboardFile(ByRef index)
 {
