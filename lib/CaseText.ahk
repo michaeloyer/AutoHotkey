@@ -44,13 +44,11 @@ PRIVATE_CaseText_SendText(text)
 {
 	if not text 
 	{
-		MsgBox 48, CaseText Error, CaseText cannot be used on blank text.
 		return
 	}
 
 	if RegExMatch(text, "[\n\r]")
 	{
-		MsgBox 48, CaseText Error, CaseText cannot be used on multi-line text.
 		return
 	}
 
